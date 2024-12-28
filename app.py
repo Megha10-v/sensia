@@ -104,9 +104,9 @@ def check_timer(timer_duration):
     elapsed_time = time.time() - session.get('start_time', 0)
 
     if elapsed_time > total_duration:
-        if total_duration == 12:
+        if total_duration == 120:
             return redirect(url_for('email_form'))
-        elif total_duration == 30 or total_duration==50:
+        elif total_duration == 300 or total_duration==1200:
             return redirect(url_for('payment'))
     remaining_time = total_duration - elapsed_time
     return render_template('timer.html', timer_duration=remaining_time)
