@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script>
+        let remainingTime = {{ timer_duration }};
+
+        function formatTime(seconds) {
+            let minutes = Math.floor(seconds / 60);
+            let secs = seconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function updateTimer() {
+            if (remainingTime <= 0) {
+                window.location.href = '{{ url_for("check_timer", timer_duration=timer_duration) }}';
+                return;
+            }
+            document.getElementById('timer').innerText = formatTime(remainingTime);
+            remainingTime--;
+            setTimeout(updateTimer, 1000);
+        }
+
+        window.onload = updateTimer;
+    </script>
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="text-center">
+        <h1>Time Remaining: <span id="timer" class="display-3"></span></h1>
+    </div>
+
+</body>
+</html>
+

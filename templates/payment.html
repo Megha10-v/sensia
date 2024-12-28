@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header text-center bg-primary text-white">
+                        <h2>Pay Now for 20 Minutes</h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/payment" method="POST" id="payment-form">
+                            <div class="mb-3">
+                                <label for="card-element" class="form-label">Card Details</label>
+                                <div id="card-element" class="form-control"></div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary w-100">Submit Payment</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        <small class="text-muted">Your card details are securely processed via Stripe.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var stripe = Stripe('pk_test_51QaeVFFVCHd51pKJLSwXDDsnatX1NXfGYbt6kcKG8a8pmL4tgOfPN3l8kGVG0iLEqC4wNRDdSnBxbrbwFcg6H3D000UvjtJvJw');
+        var elements = stripe.elements();
+        var card = elements.create('card');
+        card.mount('#card-element');
+
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    alert(result.error.message);
+                } else {
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.setAttribute('type', 'hidden');
+                    hiddenInput.setAttribute('name', 'stripeToken');
+                    hiddenInput.setAttribute('value', result.token.id);
+                    form.appendChild(hiddenInput);
+                    form.submit();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
